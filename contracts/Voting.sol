@@ -8,23 +8,20 @@ contract Voting {
   ///////////////////////
 
   struct Candidate {
-    uint256 name;
+    uint256 id;
+    string name;
+    string party;
+    string image;
     uint256 count;
   }
 
-  struct Winner { 
-    uint256 name;
-    uint256 wonByCount;
-  }
-  
     ///////////////////////
    // State Variables   //
   ///////////////////////
 
   Candidate[] private s_candidates;
-  Winner private s_winner;
-  mapping (address voter => address candidate) s_voterToCandidates;
-  mapping (address => uint) s_candidateVotes;
+  Candidate private s_winner;
+  mapping (address => bool) s_hasVoted;
   uint256 private immutable i_startTime;
   uint256 private immutable i_endTime;
 
@@ -32,7 +29,9 @@ contract Voting {
    // Events            //
   ///////////////////////
 
-  event VoteCasted(address indexed voter, address indexed candidate);
+  event VoteCasted(address indexed voter, uint256 indexed id, string name, string party);
+  event WinnerSelected(uint256 indexed id, string name, string party, string image, uint256 count);
+  event PollOpened();
 
     ///////////////////////
    // Errors            //
@@ -60,10 +59,14 @@ contract Voting {
    // Functions         //
   ///////////////////////
 
-  constructor(uint256[] memory names, uint256 startTime, uint256 endTime) {
-    for(uint256 i=0; i < names.length; i++) {
+  constructor(Candidate[] memory candidates, uint256 startTime, uint256 endTime) {
+    for(uint256 i=0; i < candidates.length; i++) {
+      uint256 candidateId = i+1;
       s_candidates.push(Candidate(
-        names[i],
+        candidateId,
+        candidates[i].name,
+        candidates[i].party,
+        candidates[i].image,
         0
       ));
     }
