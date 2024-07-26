@@ -100,7 +100,7 @@ contract Voting is AutomationCompatibleInterface {
                 candidates[i].image,
                 0
             );
-        }
+        };
         i_endTime = endTime;
         i_startTime = startTime;
         i_candidatesCount = candidates.length;
@@ -159,30 +159,38 @@ contract Voting is AutomationCompatibleInterface {
         return s_hasVoted[msg.sender];
     }
 
-    function checkUpkeep(bytes calldata /* checkData */) external view override returns (bool upkeepNeeded, bytes memory /* performData */) {
+    function checkUpkeep(
+        bytes calldata /* checkData */
+    )
+        external
+        view
+        override
+        returns (bool upkeepNeeded, bytes memory /* performData */)
+    {
         upkeepNeeded = (block.timestamp > i_endTime);
     }
 
     function performUpkeep(bytes calldata /* performData */) external override {
         if (block.timestamp > i_endTime) {
-          Candidate memory _winner;
-          uint256 _highestVote = 0;
-          for (uint i = 0; i < s_candidates.length; i++) {
-            if (s_candidates[i+1].count > _highestVote) { // id of the candidate starts from 1
-              _winner = s_candidates[i+1]
-              _highestVote = s_candidates[i+1].count
+            Candidate memory _winner;
+            uint256 _highestVote = 0;
+            for (uint i = 0; i < i_candidatesCount; i++) {
+                if (s_candidates[i + 1].count > _highestVote) {
+                    // id of the candidate starts from 1
+                    _winner = s_candidates[i + 1];
+                    _highestVote = s_candidates[i + 1].count;
+                }
             }
-          }
-          if (_winnner) {
-            s_winner = _winner
-            emit WinnerSelected(
-              s_winner.id,
-              s_winner.name,
-              s_winner.party,
-              s_winner.image,
-              s_winner.count
-            );
-          }
+            if (_winner.id != 0) {
+                s_winner = _winner;
+                emit WinnerSelected(
+                    s_winner.id,
+                    s_winner.name,
+                    s_winner.party,
+                    s_winner.image,
+                    s_winner.count
+                );
+            }
         }
     }
 }
