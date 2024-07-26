@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.24;
 
-contract Voting {
+import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
+
+contract Voting is AutomationCompatibleInterface {
     ///////////////////////
     // Type Declaration  //
     ///////////////////////
@@ -155,5 +157,32 @@ contract Voting {
      */
     function getIsVotedCandidate() external view pollOpen returns (bool) {
         return s_hasVoted[msg.sender];
+    }
+
+    function checkUpkeep(bytes calldata /* checkData */) external view override returns (bool upkeepNeeded, bytes memory /* performData */) {
+        upkeepNeeded = (block.timestamp > i_endTime);
+    }
+
+    function performUpkeep(bytes calldata /* performData */) external override {
+        if (block.timestamp > i_endTime) {
+          Candidate memory _winner;
+          uint256 _highestVote = 0;
+          for (uint i = 0; i < s_candidates.length; i++) {
+            if (s_candidates[i+1].count > _highestVote) { // id of the candidate starts from 1
+              _winner = s_candidates[i+1]
+              _highestVote = s_candidates[i+1].count
+            }
+          }
+          if (_winnner) {
+            s_winner = _winner
+            emit WinnerSelected(
+              s_winner.id,
+              s_winner.name,
+              s_winner.party,
+              s_winner.image,
+              s_winner.count
+            );
+          }
+        }
     }
 }
