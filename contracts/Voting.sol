@@ -92,15 +92,14 @@ contract Voting is AutomationCompatibleInterface {
         uint256 endTime
     ) {
         for (uint256 i = 0; i < candidates.length; i++) {
-            uint256 candidateId = i + 1;
-            s_candidates[candidateId] = Candidate(
-                candidateId,
+            s_candidates[i] = Candidate(
+                candidates[i].id,
                 candidates[i].name,
                 candidates[i].party,
                 candidates[i].image,
-                0
+                candidates[i].count
             );
-        };
+        }
         i_endTime = endTime;
         i_startTime = startTime;
         i_candidatesCount = candidates.length;
@@ -144,9 +143,9 @@ contract Voting is AutomationCompatibleInterface {
         pollOpen
         returns (Candidate[] memory)
     {
-        Candidate[] memory allCandidates;
+        Candidate[] memory allCandidates = new Candidate[](i_candidatesCount);
         for (uint i = 0; i < i_candidatesCount; i++) {
-            allCandidates[i] = (s_candidates[i]);
+            allCandidates[i] = s_candidates[i];
         }
         return allCandidates;
     }
