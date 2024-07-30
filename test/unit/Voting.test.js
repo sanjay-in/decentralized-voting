@@ -6,7 +6,6 @@ const { developmentChains } = require("../../helper-hardhat-config");
   ? describe.skip
   : describe("Voting", () => {
       let voting;
-      let deployer;
       const candidates = [
         {
           id: 1,
@@ -18,7 +17,6 @@ const { developmentChains } = require("../../helper-hardhat-config");
         { id: 2, name: "Donald Trump", party: "Republican Party", image: "img", count: 0 },
       ];
       const startTimeInUNIX = 1722067032;
-      1722255547502;
       const endTimeInUNIX = 1723487399;
 
       beforeEach(async () => {
@@ -63,6 +61,79 @@ const { developmentChains } = require("../../helper-hardhat-config");
           await deployedContract.waitForDeployment();
 
           await expect(deployedContract.getCandidatesDetails()).to.be.revertedWithCustomError(deployedContract, "Voting__PollNotOpen");
+        });
+
+        it("throws an error if voter casts a vote for second time", async () => {
+          const candidateIdToVote = 1;
+          await voting.castVote(candidateIdToVote);
+
+          await expect(voting.castVote(2)).to.be.revertedWithCustomError(voting, "Voting__AlreadyCastedVote");
+        });
+      });
+
+      describe("cast vote", () => {
+        it("Emits VoteCasted event", async () => {
+          const [deployer] = await ethers.getSigners();
+          await expect(voting.castVote(2)).to.emit(voting, "VoteCasted").withArgs(deployer.address, 2, "Donald Trump", "Republican Party");
+        });
+
+        it("updates vote count of the candidate correctly", async () => {
+          const [deployer, addr1, addr2] = await ethers.getSigners();
+          const candidateId1 = 1;
+          const candidateId2 = 2;
+          let voteCountForId1 = 0;
+          let voteCountForId2 = 0;
+
+          const candidatesDetailsBeforeVoting = await voting.getCandidatesDetails();
+          const candidateBeforeVoting = candidatesDetailsBeforeVoting.find((candidate) => candidate.id == candidateId2);
+          assert.equal(Number(candidateBeforeVoting.count), voteCountForId2);
+
+          await voting.castVote(candidateId2);
+          voteCountForId2++;
+
+          const candidatesDetailsAfterFirstVote = await voting.getCandidatesDetails();
+          const candidateAfterFirstVote = candidatesDetailsAfterFirstVote.find((candidate) => candidate.id == candidateId2);
+          assert.equal(Number(candidateAfterFirstVote.count), voteCountForId2);
+
+          await voting.connect(addr1).castVote(candidateId2);
+          voteCountForId2++;
+
+          const candidatesDetailsAfterSecondVote = await voting.getCandidatesDetails();
+          const candidateAfterSecondVote = candidatesDetailsAfterSecondVote.find((candidate) => candidate.id == candidateId2);
+          assert.equal(Number(candidateAfterSecondVote.count), voteCountForId2);
+
+          await voting.connect(addr2).castVote(candidateId1);
+          voteCountForId1++;
+
+          const candidatesDetailsAfterThirdVote = await voting.getCandidatesDetails();
+          const candidateAfterThirdVote = candidatesDetailsAfterThirdVote.find((candidate) => candidate.id == candidateId1);
+          assert.equal(Number(candidateAfterThirdVote.count), voteCountForId1);
+        });
+
+        it("checks if voter's hasVoted status has changed to true", async () => {
+          const candidateToVote = 1;
+          await voting.castVote(candidateToVote);
+          const hasCandidateVoted = await voting.getIsVotedCandidate();
+          assert.equal(hasCandidateVoted, true);
+        });
+      });
+
+      describe("Emits WinnerSelected", () => {
+        it("checks is WinnerSelected event is emitted", async () => {
+          const startTime = 1722067032;
+          const endTime = Math.floor(Date.now() / 1000) + 20;
+          const candidateIDToVote = 2;
+
+          const votingContract = await ethers.deployContract("Voting", [candidates, startTime, endTime]);
+          await votingContract.waitForDeployment();
+
+          await votingContract.castVote(candidateIDToVote);
+
+          const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+          await delay(49000);
+          const upkeepNeeded = await votingContract.checkUpkeep("0x");
+          console.log("upkeepNeeded", upkeepNeeded);
+          //await expect().to.emit("WinnerSelected");
         });
       });
     });
