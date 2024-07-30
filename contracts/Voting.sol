@@ -23,6 +23,7 @@ contract Voting is AutomationCompatibleInterface {
     Candidate private s_winner;
     mapping(uint256 => Candidate) s_candidates;
     mapping(address => bool) s_hasVoted;
+    uint256[] private s_candidateIDs;
     uint256 private immutable i_startTime;
     uint256 private immutable i_endTime;
     uint256 private immutable i_candidatesCount;
@@ -92,13 +93,14 @@ contract Voting is AutomationCompatibleInterface {
         uint256 endTime
     ) {
         for (uint256 i = 0; i < candidates.length; i++) {
-            s_candidates[i] = Candidate(
+            s_candidates[candidates[i].id] = Candidate(
                 candidates[i].id,
                 candidates[i].name,
                 candidates[i].party,
                 candidates[i].image,
                 candidates[i].count
             );
+            s_candidateIDs.push(candidates[i].id);
         }
         i_endTime = endTime;
         i_startTime = startTime;
@@ -145,7 +147,7 @@ contract Voting is AutomationCompatibleInterface {
     {
         Candidate[] memory allCandidates = new Candidate[](i_candidatesCount);
         for (uint i = 0; i < i_candidatesCount; i++) {
-            allCandidates[i] = s_candidates[i];
+            allCandidates[i] = s_candidates[s_candidateIDs[i]];
         }
         return allCandidates;
     }
