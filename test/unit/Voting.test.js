@@ -1,6 +1,7 @@
 const { assert, expect } = require("chai");
-const { network, ethers, deployments, getNamedAccounts } = require("hardhat");
+const { network, ethers } = require("hardhat");
 const { developmentChains } = require("../../helper-hardhat-config");
+const { time } = require("@nomicfoundation/hardhat-network-helpers");
 
 !developmentChains.includes(network.name)
   ? describe.skip
@@ -114,7 +115,7 @@ const { developmentChains } = require("../../helper-hardhat-config");
           const candidateToVote = 1;
           await voting.castVote(candidateToVote);
           const hasCandidateVoted = await voting.getIsVotedCandidate();
-          assert.equal(hasCandidateVoted, true);
+          expect(await hasCandidateVoted).to.be.true;
         });
       });
 
@@ -123,17 +124,21 @@ const { developmentChains } = require("../../helper-hardhat-config");
           const startTime = 1722067032;
           const endTime = Math.floor(Date.now() / 1000) + 20;
           const candidateIDToVote = 2;
+          let { name, party, image, count } = candidates.find((candidate) => candidate.id === candidateIDToVote);
 
           const votingContract = await ethers.deployContract("Voting", [candidates, startTime, endTime]);
           await votingContract.waitForDeployment();
 
           await votingContract.castVote(candidateIDToVote);
+          count++;
 
-          const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-          await delay(49000);
+          await time.increase(20);
           const upkeepNeeded = await votingContract.checkUpkeep("0x");
-          console.log("upkeepNeeded", upkeepNeeded);
-          //await expect().to.emit("WinnerSelected");
+
+          expect(upkeepNeeded[0]).to.be.true;
+          await expect(votingContract.performUpkeep("0x"))
+            .to.emit(votingContract, "WinnerSelected")
+            .withArgs(candidateIDToVote, name, party, image, count);
         });
       });
     });
