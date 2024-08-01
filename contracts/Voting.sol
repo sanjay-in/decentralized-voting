@@ -45,6 +45,13 @@ contract Voting is AutomationCompatibleInterface {
         string image,
         uint256 count
     );
+    event PollTie(
+        uint256 indexed id,
+        string name,
+        string party,
+        string image,
+        uint256 count
+    );
     event PollOpened();
 
     ///////////////////////
@@ -173,25 +180,51 @@ contract Voting is AutomationCompatibleInterface {
 
     function performUpkeep(bytes calldata /* performData */) external override {
         if (block.timestamp > i_endTime) {
-            Candidate memory _winner;
-            uint256 _highestVote = 0;
-            for (uint i = 0; i < i_candidatesCount; i++) {
-                if (s_candidates[i + 1].count > _highestVote) {
-                    // id of the candidate starts from 1
-                    _winner = s_candidates[i + 1];
-                    _highestVote = s_candidates[i + 1].count;
+            _selectPollWinner();
+        }
+    }
+
+    /**
+     * Internal function which handles logic for selecting the highest vote after poll closed
+     */
+    function _selectPollWinner() internal {
+        Candidate memory _winner;
+        uint256 _highestVote = 0;
+        Candidate[] memory _sameVotes = new Candidate[](i_candidatesCount);
+        uint256 _sameVotesCount = 0;
+        for (uint i = 0; i < i_candidatesCount; i++) {
+            if (s_candidates[i + 1].count > _highestVote) {
+                // id of the candidate starts from 1
+                _winner = s_candidates[i + 1];
+                _highestVote = s_candidates[i + 1].count;
+                if (_sameVotesCount > 0) {
+                    delete _sameVotes;
+                    _sameVotesCount = 0;
                 }
+            } else if (s_candidates[i + 1].count == _highestVote) {
+                _sameVotes[_sameVotesCount] = s_candidates[i + 1];
+                _sameVotesCount++;
             }
-            if (_winner.id != 0) {
-                s_winner = _winner;
-                emit WinnerSelected(
-                    s_winner.id,
-                    s_winner.name,
-                    s_winner.party,
-                    s_winner.image,
-                    s_winner.count
+        }
+        if (_sameVotesCount > 0) {
+            for (uint i = 0; i <= _sameVotesCount; i++) {
+                emit PollTie(
+                    _sameVotes[i].id,
+                    _sameVotes[i].name,
+                    _sameVotes[i].party,
+                    _sameVotes[i].image,
+                    _sameVotes[i].count
                 );
             }
+        } else if (_winner.id != 0) {
+            s_winner = _winner;
+            emit WinnerSelected(
+                s_winner.id,
+                s_winner.name,
+                s_winner.party,
+                s_winner.image,
+                s_winner.count
+            );
         }
     }
 }
