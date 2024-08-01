@@ -141,4 +141,44 @@ const { time } = require("@nomicfoundation/hardhat-network-helpers");
             .withArgs(candidateIDToVote, name, party, image, count);
         });
       });
+
+      describe("Emits PollTie", () => {
+        it("checks if event emitted if poll tie", async () => {
+          const startTime = Math.floor(Date.now() / 1000);
+          const endTime = startTime + 1800;
+
+          const [deployer, addr1, addr2, addr3] = await ethers.getSigners();
+
+          const voting = await ethers.deployContract("Voting", [candidates, startTime, endTime]);
+          await voting.waitForDeployment();
+
+          await voting.castVote(1);
+          await voting.connect(addr1).castVote(2);
+          await voting.connect(addr2).castVote(2);
+          await voting.connect(addr3).castVote(1);
+
+          const candidateDetails = await voting.getCandidatesDetails();
+          console.log("candidateDetails", candidateDetails);
+
+          await time.increase(endTime + 20);
+          const upkeepNeeded = await voting.checkUpkeep("0x");
+          console.log("upkeepNeeded", upkeepNeeded);
+          const tx = await voting.performUpkeep("0x");
+          const receipt = await tx.wait();
+
+          console.log("receipt", receipt.logs);
+          // const tx = await voting.performUpkeep("0x");
+          // const receipt = await tx.wait();
+          // console.log("receipt", tx.events);
+          await expect(voting.performUpkeep("0x"))
+            .to.emit(voting, "PollTie")
+            .withArgs(
+              candidateDetails[1].id,
+              candidateDetails[1].name,
+              candidateDetails[1].party,
+              candidateDetails[1].image,
+              candidateDetails[1].count
+            );
+        });
+      });
     });
