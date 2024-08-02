@@ -190,6 +190,7 @@ contract Voting is AutomationCompatibleInterface {
     function _selectPollWinner() internal {
         Candidate memory _winner;
         uint256 _highestVote = 0;
+        Candidate memory _highestCandidate;
         Candidate[] memory _sameVotes = new Candidate[](i_candidatesCount);
         uint256 _sameVotesCount = 0;
         for (uint i = 0; i < i_candidatesCount; i++) {
@@ -197,17 +198,23 @@ contract Voting is AutomationCompatibleInterface {
                 // id of the candidate starts from 1
                 _winner = s_candidates[i + 1];
                 _highestVote = s_candidates[i + 1].count;
+                _highestCandidate = s_candidates[i + 1];
                 if (_sameVotesCount > 0) {
                     delete _sameVotes;
                     _sameVotesCount = 0;
                 }
             } else if (s_candidates[i + 1].count == _highestVote) {
+                if (_highestCandidate.id > 0) {
+                    _sameVotes[_sameVotesCount] = _highestCandidate;
+                    delete _highestCandidate;
+                    _sameVotesCount++;
+                }
                 _sameVotes[_sameVotesCount] = s_candidates[i + 1];
                 _sameVotesCount++;
             }
         }
         if (_sameVotesCount > 0) {
-            for (uint i = 0; i <= _sameVotesCount; i++) {
+            for (uint i = 0; i < _sameVotesCount; i++) {
                 emit PollTie(
                     _sameVotes[i].id,
                     _sameVotes[i].name,
