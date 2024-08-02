@@ -158,19 +158,19 @@ const { time } = require("@nomicfoundation/hardhat-network-helpers");
           await voting.connect(addr3).castVote(1);
 
           const candidateDetails = await voting.getCandidatesDetails();
-          console.log("candidateDetails", candidateDetails);
 
           await time.increase(endTime + 20);
-          const upkeepNeeded = await voting.checkUpkeep("0x");
-          console.log("upkeepNeeded", upkeepNeeded);
-          const tx = await voting.performUpkeep("0x");
-          const receipt = await tx.wait();
+          await voting.checkUpkeep("0x");
 
-          console.log("receipt", receipt.logs);
-          // const tx = await voting.performUpkeep("0x");
-          // const receipt = await tx.wait();
-          // console.log("receipt", tx.events);
           await expect(voting.performUpkeep("0x"))
+            .to.emit(voting, "PollTie")
+            .withArgs(
+              candidateDetails[0].id,
+              candidateDetails[0].name,
+              candidateDetails[0].party,
+              candidateDetails[0].image,
+              candidateDetails[0].count
+            )
             .to.emit(voting, "PollTie")
             .withArgs(
               candidateDetails[1].id,
