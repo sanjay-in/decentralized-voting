@@ -1,0 +1,33 @@
+.home-component {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.home-header {
+  padding: 0%;
+  margin: 0;
+  position: absolute;
+  right: 50%;
+  top: 3%;
+  translate: calc(50%);
+  font-weight: 700;
+  font-size: 2rem;
+  color: whitesmoke;
+  opacity: 0.8;
+}
+
+.poster-1 {
+  /*width: 15vw; */
+  height: 100vh;
+  position: absolute;
+  left: 0%;
+}
+
+.poster-2 {
+  height: 100vh;
+  position: absolute;
+  right: 0%;
+}
