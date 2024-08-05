@@ -15,7 +15,8 @@
   translate: calc(50%);
   font-weight: 700;
   font-size: 2rem;
-  color: whitesmoke;
+  color: royalblue;
+  text-transform: uppercase;
   opacity: 0.8;
 }
 
@@ -24,10 +25,12 @@
   height: 100vh;
   position: absolute;
   left: 0%;
+  position: fixed;
 }
 
 .poster-2 {
   height: 100vh;
   position: absolute;
   right: 0%;
+  position: fixed;
 }

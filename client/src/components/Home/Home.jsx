@@ -2,6 +2,7 @@ import React from "react";
 import poster1 from "../../assets/poster1.jpg";
 import poster2 from "../../assets/poster2.jpg";
 import "./Home.css";
+import CandidateList from "../Candidates/CandidateList/CandidateList";
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
         <img className="poster-1" src={poster1} />
         <img className="poster-2" src={poster2} />
       </div>
+      <CandidateList />
     </div>
   );
 };
