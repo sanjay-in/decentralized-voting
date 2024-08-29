@@ -20,6 +20,18 @@
   opacity: 0.8;
 }
 
+.timer {
+  position: absolute;
+  right: 8%;
+  color: rgb(101, 100, 100);
+  font-weight: 700;
+  font-size: 1rem;
+  width: 25rem;
+  /* background-color: rgba(222, 61, 79, 255); */
+  padding: 1rem;
+  z-index: 1;
+}
+
 .poster-1 {
   /*width: 15vw; */
   height: 100vh;
