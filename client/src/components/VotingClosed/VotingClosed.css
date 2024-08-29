@@ -1,0 +1,8 @@
+.voting-start {
+  position: absolute;
+  margin: 0;
+  padding: 0%;
+  left: 50%;
+  translate: calc(-50%);
+  color: rgba(128, 128, 128, 0.562);
+}
