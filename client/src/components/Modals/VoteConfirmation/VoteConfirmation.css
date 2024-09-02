@@ -1,0 +1,8 @@
+.confirmation-modal-body,
+.confirmation-modal-detail {
+  display: flex;
+}
+
+.confirmation-modal-detail > div {
+  font-weight: 600;
+}
