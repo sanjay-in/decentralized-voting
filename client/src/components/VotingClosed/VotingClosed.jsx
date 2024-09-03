@@ -2,6 +2,7 @@ import React from "react";
 import CandidateCard from "../Candidates/CandidateCard/CandidateCard";
 import { countdownClock } from "../CountdownClock/CountdownClock";
 import "./VotingClosed.css";
+import Winner from "../Winner/Winner";
 
 const VotingClosed = ({ pollEnded, winner, startTime }) => {
   // const { image, party, id, name } = winner;
@@ -16,11 +17,24 @@ const VotingClosed = ({ pollEnded, winner, startTime }) => {
           </span>
         </h2>
       ) : (
-        <div>
-          <h2>The poll has ended</h2>
-          <div>The winner is</div>
-          {/* <CandidateCard image={image} party={party} id={id} name={name} /> */}
-        </div>
+        <Winner
+          winner={[
+            {
+              id: 1,
+              name: "Joe Biden",
+              party: "Democratic Party",
+              image: "https://boredapeyachtclub.com/_next/image?url=%2Fimages%2Ftransitions%2Fbayc%2F2.webp&w=1200&q=75",
+              count: 0,
+            },
+            {
+              id: 1,
+              name: "Joe Biden",
+              party: "Democratic Party",
+              image: "https://boredapeyachtclub.com/_next/image?url=%2Fimages%2Ftransitions%2Fbayc%2F2.webp&w=1200&q=75",
+              count: 0,
+            },
+          ]}
+        />
       )}
     </div>
   );
