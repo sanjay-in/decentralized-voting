@@ -1,0 +1,19 @@
+.winner-container {
+  width: 100vw;
+  color: grey;
+}
+
+.winner-card {
+  display: flex;
+}
+
+.single-winner > h2,
+.winner-tie > h2 {
+  font-weight: 700;
+}
+
+.tie-candidates {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
