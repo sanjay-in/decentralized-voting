@@ -1,0 +1,15 @@
+.modal-body {
+  color: black;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  display: flex;
+}
+
+.voted-content {
+  margin: auto;
+  display: flex;
+}
+
+.voted-content > img {
+  width: 2.5rem;
+}
