@@ -1,31 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
+import VoteConfirmation from "../../Modals/VoteConfirmation/VoteConfirmation";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import "./CandidateCard.css";
 
-const CandidateCard = ({ image, count, id, party, name }) => {
+const CandidateCard = ({ image, count, id, party, name, hasVoted }) => {
+  const [showVotingConfirmation, setShowVotingConfirmation] = useState(false);
   return (
-    <div className="card">
-      <Card style={{ width: "15rem" }}>
+    <div>
+      <Card id="card">
         <Card.Img className="card-img" variant="top" src={image} />
-        <Card.Body>
+        <Card.Body id="card-body">
           <Card.Title className="card-title">{name}</Card.Title>
-          {/* <Card.Text>Some quick example text to build on the card title and make up the bulk of the card's content.</Card.Text> */}
           <ListGroup className="list-group-flush">
             <ListGroup.Item className="card-list-item">
-              <span className="card-span">Candidate Number</span> #{id}
+              <span className="card-span">Candidate Number:</span> #{id}
             </ListGroup.Item>
             <ListGroup.Item className="card-list-item">
-              <span className="card-span">Party</span> {party}
+              <span className="card-span">Party:</span> {party}
             </ListGroup.Item>
             <ListGroup.Item className="card-list-item">
-              <span className="card-span">Total Votes</span> {count}
+              <span className="card-span">Total Votes:</span> {count}
             </ListGroup.Item>
           </ListGroup>
-          <Button className="card-btn">Vote</Button>
+          <Button className="card-btn" onClick={() => setShowVotingConfirmation(!showVotingConfirmation)} disabled={hasVoted}>
+            Vote
+          </Button>
         </Card.Body>
       </Card>
+      <VoteConfirmation image={image} id={id} party={party} name={name} show={showVotingConfirmation} hide={setShowVotingConfirmation} />
     </div>
   );
 };

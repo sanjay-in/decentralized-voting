@@ -1,32 +1,49 @@
-.card {
-  color: black;
+#card {
+  width: 35rem;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.9rem;
+  margin: 0 0.5rem 1rem;
+}
+
+.card-content {
+  display: flex;
+}
+
+#card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  justify-content: space-between;
 }
 
 .card-img {
-  width: 100%;
+  width: 15rem !important;
+  height: 15rem !important;
 }
 
 .card-title {
-  font-weight: 700;
+  font-weight: 700 !important;
   font-size: 1.5rem;
 }
 
 .card-list-item {
   display: flex;
   justify-content: space-between;
-  margin: 10px;
+  margin: 8px;
   font-weight: 600;
 }
 
 .card-span {
   color: gray;
+  margin-right: 0.5rem;
 }
 
 .card-btn {
   color: white;
   background-color: royalblue;
   width: 10rem;
-  margin-top: 10px;
+  margin: 5px auto 0;
   transition: all 0.1s ease-out;
   font-weight: 600;
 }
