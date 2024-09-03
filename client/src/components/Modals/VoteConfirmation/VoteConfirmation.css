@@ -1,8 +1,38 @@
 .confirmation-modal-body,
 .confirmation-modal-detail {
+  color: black;
   display: flex;
 }
 
+.confirmation-modal-header {
+  color: royalblue;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.confirmation-modal-details {
+  justify-content: space-between;
+  margin: auto;
+}
+
+.confirmation-modal-detail {
+  font-size: 1.5rem;
+  margin: 1.2rem;
+}
+
+.confirmation-modal-detail > span {
+  color: gray;
+  font-weight: 600;
+}
 .confirmation-modal-detail > div {
   font-weight: 600;
+  margin-left: 1rem;
+}
+
+.confirmation-modal-img {
+  height: 20rem;
+}
+
+.confirmation-btn {
+  background-color: royalblue;
 }
