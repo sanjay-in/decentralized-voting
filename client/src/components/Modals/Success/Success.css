@@ -1,0 +1,27 @@
+#success-modal {
+  display: flex;
+  width: fit-content;
+}
+.success-modal-header {
+  color: #97c322;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.success-modal-body {
+  margin: auto;
+}
+
+.success-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.success-content > div {
+  margin: auto 2rem;
+}
+
+.success-content > img {
+  margin: auto;
+  width: 20rem;
+}
