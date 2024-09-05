@@ -1,0 +1,28 @@
+#error-modal {
+  display: flex;
+  width: fit-content;
+}
+
+.error-modal-header {
+  color: #e74c3c;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.error-modal-body {
+  margin: auto;
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.error-content > div {
+  margin: auto 2rem;
+}
+
+.error-content > img {
+  margin: auto;
+  width: 20rem;
+}
