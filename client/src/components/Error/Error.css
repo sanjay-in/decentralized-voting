@@ -1,0 +1,11 @@
+.error-component {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  translate: calc(-50%);
+}
+
+.error-message {
+  color: rgba(128, 128, 128, 0.5);
+  margin-bottom: 1rem;
+}
