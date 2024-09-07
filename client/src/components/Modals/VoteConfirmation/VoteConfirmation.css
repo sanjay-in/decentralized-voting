@@ -35,4 +35,6 @@
 
 .confirmation-btn {
   background-color: royalblue;
+  height: 2.5rem !important;
+  width: 10rem !important;
 }
