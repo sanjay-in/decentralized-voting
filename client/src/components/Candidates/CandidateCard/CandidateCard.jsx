@@ -15,18 +15,22 @@ const CandidateCard = ({ image, count, id, party, name, hasVoted }) => {
           <Card.Title className="card-title">{name}</Card.Title>
           <ListGroup className="list-group-flush">
             <ListGroup.Item className="card-list-item">
-              <span className="card-span">Candidate Number:</span> #{id}
+              <span className="card-span">Candidate Number:</span> #{Number(id)}
             </ListGroup.Item>
             <ListGroup.Item className="card-list-item">
               <span className="card-span">Party:</span> {party}
             </ListGroup.Item>
             <ListGroup.Item className="card-list-item">
-              <span className="card-span">Total Votes:</span> {count}
+              <span className="card-span">Total Votes:</span> {Number(count)}
             </ListGroup.Item>
           </ListGroup>
-          <Button className="card-btn" onClick={() => setShowVotingConfirmation(!showVotingConfirmation)} disabled={hasVoted}>
-            Vote
-          </Button>
+          {hasVoted ? (
+            <div></div>
+          ) : (
+            <Button className="card-btn" onClick={() => setShowVotingConfirmation(!showVotingConfirmation)} disabled={hasVoted}>
+              Vote
+            </Button>
+          )}
         </Card.Body>
       </Card>
       <VoteConfirmation image={image} id={id} party={party} name={name} show={showVotingConfirmation} hide={setShowVotingConfirmation} />
