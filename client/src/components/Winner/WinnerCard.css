@@ -1,4 +1,4 @@
-#card {
+#winner-card {
   width: 30rem;
   display: flex;
   flex-direction: row;
@@ -6,7 +6,7 @@
   margin: 1rem auto 1rem;
 }
 
-.card-content {
+.winner-card-content {
   display: flex;
 }
 
@@ -17,24 +17,24 @@
   justify-content: space-between;
 }
 
-.card-img {
+.winner-card-img {
   width: 10rem !important;
   height: 10rem !important;
 }
 
-.card-title {
+.winner-card-title {
   font-weight: 700 !important;
   font-size: 1.5rem;
 }
 
-.card-list-item {
+.winner-card-list-item {
   display: flex;
   justify-content: space-between;
   margin: 8px;
   font-weight: 600;
 }
 
-.card-span {
+.winner-card-span {
   color: gray;
   margin-right: 0.5rem;
 }
